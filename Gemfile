@@ -36,6 +36,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'grape'
 gem 'slack-ruby-client'
 gem 'async-websocket'
+gem 'config'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

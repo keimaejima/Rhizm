@@ -1,0 +1,2 @@
+class StableToken < ApplicationRecord
+end
