@@ -70,11 +70,8 @@ module V1
                )
            rescue => e
              p e
-             client.chat_postMessage(
-               channel: params[:event][:item][:channel],
-               text: Settings.alert.something_wrong,
-               s_user: true
-             )
+             post_error(client, arams[:event][:item][:channel])
+             error!('Internal Server Error', 500)
            end
          end
        when 'message'
@@ -85,15 +82,22 @@ module V1
           case params[:event][:text]
           when ranking
             ##RIZ所持数ランキング確認
-            user_name = ''
-            for user in User.all
-              user_name+user.slack_id
+            begin
+              message = "【RIZ所持数ランキング】\n"
+              stable_tokens = StableToken.order('token_amount DESC').limit(3)
+              users = User.where('(id=?) or (id=?) or (id=?)', stable_tokens[0].user_id, stable_tokens[1].user_id, stable_tokens[2].user_id)
+              users.each_with_index{|user, index|
+                message += "#{index+1}位は <@#{user.slack_id}>さんで #{stable_tokens[index].token_amount} RIZ\n"
+              }
+              client.chat_postMessage(
+                  channel: params[:event][:channel],
+                  text: message,
+                  s_user: true
+                )
+            rescue => e
+              post_error(client, 'bot-test')
+              error!('Internal Server Error', 500)
             end
-            client.chat_postMessage(
-                channel: params[:event][:channel],
-                text: user_name,
-                s_user: true
-              )
           when hold
             ##個人のRIZ所持数確認
             begin
@@ -107,11 +111,8 @@ module V1
               )
             rescue => e
               p e
-              client.chat_postMessage(
-                channel: params[:event][:channel],
-                text: Settings.alert.something_wrong,
-                s_user: true
-              )
+              post_error(client, params[:event][:channel])
+              error!('Internal Server Error', 500)
             end
           end
         end
