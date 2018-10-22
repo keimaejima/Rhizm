@@ -9,3 +9,10 @@ StableToken.create(user_id:0, token_amount:10000)
 StableToken.create(user_id:1, token_amount:5000)
 StableToken.create(user_id:2, token_amount:4000)
 StableToken.create(user_id:3, token_amount:3000)
+
+TemporaryToken.delete_all()
+TemporaryToken.create(user_id:0, token_amount:150)
+TemporaryToken.create(user_id:1, token_amount:50)
+TemporaryToken.create(user_id:2, token_amount:50)
+TemporaryToken.create(user_id:3, token_amount:50)
+

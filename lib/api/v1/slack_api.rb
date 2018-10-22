@@ -8,30 +8,6 @@ module V1
        config.token = ENV['SLACK_TOKEN']
      end
 
-     # client_real = Slack::RealTime::Client.new
-
-     # client_real.on :hello do
-     #   puts "Successfully connected, welcome '#{client_real.self.name}' to the '#{client_real.team.name}' team at https://#{client_real.team.domain}.slack.com."
-     # end
-     # client_real.on :message do |data|
-     #   case data.text
-     #   when 'bot hi' then
-     #     client_real.message channel: data.channel, text: "Hi <@#{data.user}>!"
-     #   when '@rhizm-test 参加メンバーは？'
-     #     allUser = User.all?
-     #     client_real.message channel: data.channel, text: "Hi <@#{allUser}>!"
-     #   when /^bot/ then
-     #     client_real.message channel: data.channel, text: "Sorry <@#{data.user}>, what?"
-     #   end
-     # end
-     # client_real.on :close do |_data|
-     #   puts "Client is about to disconnect"
-     # end
-     # client_real.on :closed do |_data|
-     #   puts "Client has disconnected successfully!"
-     # end
-     # client_real.start!
-
      helpers do
 
      end
@@ -102,8 +78,9 @@ module V1
             ##個人のRIZ所持数確認
             begin
               user = User.find_by(slack_id: params[:event][:user])
-              riz = StableToken.find_by(user_id: user.user_id)
-              message = "<@#{params[:event][:user]}> さんは現時点で#{riz.token_amount}RIZ所持しています"
+              stable_riz = StableToken.find_by(user_id: user.id)
+              temporary_riz = TemporaryToken.find_by(user_id: user.id)
+              message = "<@#{params[:event][:user]}> さんは現時点で永続トークン：#{stable_riz.token_amount}RIZ、一時トークン：#{temporary_riz.token_amount}RIZ所持しています"
               client.chat_postMessage(
                 channel: params[:event][:channel],
                 text: message,
@@ -114,8 +91,13 @@ module V1
               post_error(client, params[:event][:channel])
               error!('Internal Server Error', 500)
             end
+
+          else
+
           end
         end
+       else
+
        end
      end
    end

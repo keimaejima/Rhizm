@@ -1,0 +1,2 @@
+class TemporaryToken < ApplicationRecord
+end
