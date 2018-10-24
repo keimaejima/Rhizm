@@ -8,6 +8,14 @@ module V1
 	            s_user: true
 	          )
 	        end
+
+	        def post_message(client, channel_name, message)
+	        	client.chat_postMessage(
+	            channel: channel_name,
+	            text: message,
+	            s_user: true
+	          )
+	        end
 	    end
 	end
 end
