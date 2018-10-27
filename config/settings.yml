@@ -1,2 +1,6 @@
 alert:
   something_wrong: '何か問題が発生したようです。少し時間を置いてから同じ操作をしてください。'
+token_stamp:
+  fifty: 'yum'
+token_amount:
+  fifty: 50

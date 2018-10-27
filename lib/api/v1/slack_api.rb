@@ -31,7 +31,8 @@ module V1
       case params[:event][:type]
       when 'reaction_added'
          case params[:event][:reaction]
-         when 'yum'
+          #TODO:トークンの付与量によって分岐をつくる
+         when Settings.token_stamp.fifty
            begin
             present_user = User.find_by(slack_id: params[:event][:user])
             receive_user = User.find_by(slack_id: params[:event][:item_user])
@@ -39,11 +40,9 @@ module V1
             p_token_amount = 50
             t_token_amount = TemporaryToken.find_by(user_id: present_user.id).token_amount
             s_token_amount = StableToken.find_by(user_id: present_user.id).token_amount
-            p t_token_amount
-            p s_token_amount
             if t_token_amount >= p_token_amount
               TemporaryToken.where(user_id: present_user.id).update(token_amount: t_token_amount - p_token_amount)
-              TemporaryToken.where(user_id: receive_user.id).update(token_amount: StableToken.find_by(user_id: receive_user.id).token_amount + p_token_amount)
+              StableToken.where(user_id: receive_user.id).update(token_amount: StableToken.find_by(user_id: receive_user.id).token_amount + p_token_amount)
               PresentToken.create(
                 present_user_id: present_user.user_id,
                 receive_user_id: receive_user.user_id,
@@ -58,10 +57,10 @@ module V1
                 token_amount_master_id: 0
                 )
             else
-              post_message(client, arams[:event][:item][:channel], 'RIZの残高が足りないようです')
+              post_message(client, params[:event][:item][:channel], 'RIZの残高が足りないようです')
+              error!('Token amount is not enough', 400)
             end
           rescue => e
-           p e
            post_error(client, params[:event][:item][:channel])
            error!('Internal Server Error', 500)
          end
@@ -78,7 +77,6 @@ module V1
                message = "【RIZ所持数ランキング】\n"
                stable_tokens = StableToken.order('token_amount DESC').limit(3)
                users = User.where('(id=?) or (id=?) or (id=?)', stable_tokens[0].user_id, stable_tokens[1].user_id, stable_tokens[2].user_id)
-               p users
                users.each_with_index{|user, index|
                  message += "#{index+1}位は <@#{user.slack_id}>さんで #{stable_tokens[index].token_amount} RIZ\n"
                }
@@ -88,7 +86,6 @@ module V1
                  s_user: true
                  )
              rescue => e
-               p e
                post_error(client, params[:event][:channel])
                error!('Internal Server Error', 500)
              end
@@ -105,7 +102,6 @@ module V1
                 s_user: true
                 )
             rescue => e
-              p e
               post_error(client, params[:event][:channel])
               error!('Internal Server Error', 500)
             end
