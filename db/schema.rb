@@ -16,10 +16,10 @@ ActiveRecord::Schema.define(version: 2018_10_28_070336) do
   enable_extension "plpgsql"
 
   create_table "messages", force: :cascade do |t|
-    t.integer "slack_id"
+    t.string "slack_id"
     t.text "text"
-    t.integer "channel_id"
-    t.integer "team_id"
+    t.string "channel_id"
+    t.string "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

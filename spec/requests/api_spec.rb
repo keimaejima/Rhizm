@@ -3,6 +3,51 @@ require 'rails_helper'
 user1_slack_id = 'UD6BH40821'
 user2_slack_id = 'UD6BH40822'
 
+describe 'チームにユーザーが加わった時' do
+  before do
+    @params = {
+      'event' =>
+      {
+        'subtype' => 'channel_join',
+        'user' => user1_slack_id
+      }
+    }
+  end
+  it 'チームにユーザーを追加' do
+    users_count = User.all.count
+    post '/api/v1/slacks', params: @params
+    p User.all
+    expect(User.all.count).to eq (users_count + 1)
+  end
+end
+
+describe 'トークン付与のテスト：自分自身に付与しようとした場合' do
+  before do
+    user1 = User.create(
+      slack_id: user1_slack_id
+    )
+    StableToken.create(user_id: user1.id, token_amount:100)
+    TemporaryToken.create(user_id: user1.id, token_amount:100)
+    @params = {
+      'event' =>
+      {
+        'type' => 'reaction_added',
+        'item' => {
+          'channel' => 'bot-test'
+          },
+        'user' => user1_slack_id,
+        'item_user' => user1_slack_id,
+        'reaction' => Settings.token_stamp.fifty
+      }
+    }
+  end
+  it "user1からuser1にTemporaryTokenを50RIZ付与する" do
+    post '/api/v1/slacks', params: @params
+    expect(StableToken.find_by(user_id: User.find_by(slack_id: user1_slack_id).id).token_amount).to eq 100
+    expect(TemporaryToken.find_by(user_id: User.find_by(slack_id: user1_slack_id).id).token_amount).to eq 100
+  end
+end
+
 describe 'トークン付与のテスト：TemporaryTokenを十分持っている場合' do
   before do
     user1 = User.create(

@@ -25,7 +25,6 @@ class Slack_API < Grape::API
      bot_name = '<@UDF39BHFY> '
      ranking = bot_name + 'ranking'
      hold = bot_name + 'hold'
-     channel_join = 'channel_join'
 
      p params
      case params[:event][:type]
@@ -33,6 +32,10 @@ class Slack_API < Grape::API
        case params[:event][:reaction]
         #TODO:トークンの付与量によって分岐をつくる
       when Settings.token_stamp.fifty
+        if params[:event][:user] == params[:event][:item_user]
+          post_message(client, params[:event][:item][:channel], "<@#{params[:event][:user]}> さん 自分自身にトークンを渡すことはできません")
+          error!('', 200)
+        end
        begin
         present_user = User.find_by(slack_id: params[:event][:user])
         receive_user = User.find_by(slack_id: params[:event][:item_user])
@@ -60,6 +63,8 @@ class Slack_API < Grape::API
             post_message(client, params[:event][:item][:channel], 'RIZの残高が足りないようです')
             error!('Token amount is not enough', 400)
           end
+          '200 OK'
+          status 200
         rescue => e
           p e
           post_error(client, params[:event][:item][:channel])
@@ -79,9 +84,14 @@ class Slack_API < Grape::API
           p e
       end
 
-      if params[:event][:subtype] == channel_join
+      if params[:event][:subtype] == Settings.slack_param.channel_join
          ##ユーザーがチームに新規参加
-         User.create(slack_id: params[:event][:user])
+        begin
+          User.create(slack_id: params[:event][:user])
+        rescue => e
+          post_error(client, Settings.channel_name.alert,'ユーザーの作成に失敗しました')
+          error!('User create failure', 500)
+        end
        else
         case params[:event][:text]
         when ranking
@@ -93,11 +103,7 @@ class Slack_API < Grape::API
              users.each_with_index{|user, index|
                message += "#{index+1}位は <@#{user.slack_id}>さんで #{stable_tokens[index].token_amount} RIZ\n"
              }
-             client.chat_postMessage(
-               channel: params[:event][:channel],
-               text: message,
-               s_user: true
-               )
+             post_message(client, params[:event][:channel], message)
            rescue => e
              post_error(client, params[:event][:channel])
              error!('Internal Server Error', 500)
@@ -109,11 +115,7 @@ class Slack_API < Grape::API
             stable_riz = StableToken.find_by(user_id: user.id)
             temporary_riz = TemporaryToken.find_by(user_id: user.id)
             message = "<@#{params[:event][:user]}> さんは現時点で永続トークン：#{stable_riz.token_amount}RIZ、一時トークン：#{temporary_riz.token_amount}RIZ所持しています"
-            client.chat_postMessage(
-              channel: params[:event][:channel],
-              text: message,
-              s_user: true
-              )
+            post_message(client, params[:event][:channel], message)
           rescue => e
             post_error(client, params[:event][:channel])
             error!('Internal Server Error', 500)
