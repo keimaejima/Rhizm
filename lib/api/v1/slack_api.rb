@@ -15,6 +15,7 @@ class Slack_API < Grape::API
    #   requires :challenge
    # end
    post do
+    #TODO: 決済していないユーザーの時はボットで排除する機能実装
      unless params[:challenge].nil?
        error!(params[:challenge], 200)
      end
