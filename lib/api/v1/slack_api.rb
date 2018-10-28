@@ -2,9 +2,13 @@ module V1
 class Slack_API < Grape::API
  resource "slacks" do
 
-   Slack.configure do |config|
+  #Slackクライアント初期化
+  Slack.configure do |config|
      config.token = ENV['SLACK_TOKEN']
-   end
+  end
+
+  client = Slack::Web::Client.new
+  client.auth_test
 
    helpers V1::Helpers::SlackHelper
 
@@ -19,9 +23,6 @@ class Slack_API < Grape::API
      unless params[:challenge].nil?
        error!(params[:challenge], 200)
      end
-
-     client = Slack::Web::Client.new
-     client.auth_test
 
      bot_name = '<@UDF39BHFY> '
      ranking = bot_name + 'ranking'
@@ -52,8 +53,9 @@ class Slack_API < Grape::API
               receive_user_id: receive_user.user_id,
               token_amount_master_id: 0
               )
-          elsif s_token_amount >= p_token_amount
-            StableToken.where(user_id: present_user.id).update(token_amount: s_token_amount - p_token_amount)
+          elsif (t_token_amount + s_token_amount) >= p_token_amount
+            TemporaryToken.where(user_id: present_user.id).update(token_amount: 0)
+            StableToken.where(user_id: present_user.id).update(token_amount: s_token_amount - (p_token_amount - t_token_amount))
             StableToken.where(user_id: receive_user.id).update(token_amount: StableToken.find_by(user_id: receive_user.id).token_amount + p_token_amount)
             PresentToken.create(
               present_user_id: present_user.user_id,

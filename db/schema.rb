@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_28_133820) do
+ActiveRecord::Schema.define(version: 2018_10_28_140415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,7 @@ ActiveRecord::Schema.define(version: 2018_10_28_133820) do
     t.string "slack_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "charge_flag"
   end
 
 end
