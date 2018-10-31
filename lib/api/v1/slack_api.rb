@@ -31,9 +31,9 @@ class Slack_API < Grape::API
      p params
      case params[:event][:type]
      when 'reaction_added'
-       case params[:event][:reaction]
+      case params[:event][:reaction]
         #TODO:トークンの付与量によって分岐をつくる
-      when Settings.token_stamp.fifty
+      when /(10*?|50*?)riz/
         if params[:event][:user] == params[:event][:item_user]
           post_message(client, params[:event][:item][:channel], "<@#{params[:event][:user]}> さん 自分自身にトークンを渡すことはできません")
           error!('', 200)
@@ -42,7 +42,7 @@ class Slack_API < Grape::API
         present_user = User.find_by(slack_id: params[:event][:user])
         receive_user = User.find_by(slack_id: params[:event][:item_user])
           #プレゼンとするトークンの量によって分岐させる
-          p_token_amount = 50
+          p_token_amount = params[:event][:reaction].delete("^0-9").to_i
           t_token_amount = TemporaryToken.find_by(user_id: present_user.id).token_amount
           s_token_amount = StableToken.find_by(user_id: present_user.id).token_amount
           if t_token_amount >= p_token_amount
@@ -101,13 +101,14 @@ class Slack_API < Grape::API
            ##RIZ所持数ランキング確認
            begin
              message = "【RIZ所持数ランキング】\n"
-             stable_tokens = StableToken.order('token_amount DESC').limit(3)
-             users = User.where('(id=?) or (id=?) or (id=?)', stable_tokens[0].user_id, stable_tokens[1].user_id, stable_tokens[2].user_id)
-             users.each_with_index{|user, index|
-               message += "#{index+1}位は <@#{user.slack_id}>さんで #{stable_tokens[index].token_amount} RIZ\n"
+             stable_tokens = StableToken.order('token_amount DESC').limit(10)
+             stable_tokens.each_with_index{|s, index|
+                p index
+               message += "#{index+1}位は <@#{s.user.slack_id}>さんで #{s.token_amount} RIZ\n"
              }
              post_message(client, params[:event][:channel], message)
            rescue => e
+              p e
              post_error(client, params[:event][:channel])
              error!('Internal Server Error', 500)
            end

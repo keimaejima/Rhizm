@@ -37,7 +37,7 @@ describe 'トークン付与のテスト：自分自身に付与しようとし�
           },
         'user' => user1_slack_id,
         'item_user' => user1_slack_id,
-        'reaction' => Settings.token_stamp.fifty
+        'reaction' => '50riz'
       }
     }
   end
@@ -67,7 +67,7 @@ describe 'トークン付与のテスト：TemporaryTokenを十分持ってい�
         'channel' => 'bot-test',
         'user' => user1_slack_id,
         'item_user' => user2_slack_id,
-        'reaction' => Settings.token_stamp.fifty
+        'reaction' => '50riz'
       }
     }
   end
@@ -98,7 +98,7 @@ describe 'トークン付与のテスト：TemporaryTokenが0で、StableToken�
         'channel' => 'bot-test',
         'user' => user1_slack_id,
         'item_user' => user2_slack_id,
-        'reaction' => Settings.token_stamp.fifty
+        'reaction' => '50riz'
       }
     }
   end
@@ -128,7 +128,7 @@ describe 'トークン付与のテスト：TemporaryTokenが0以上だが不十�
         'channel' => 'bot-test',
         'user' => user1_slack_id,
         'item_user' => user2_slack_id,
-        'reaction' => Settings.token_stamp.fifty
+        'reaction' => '50riz'
       }
     }
   end
@@ -161,13 +161,12 @@ describe 'トークン付与のテスト：TemporaryTokenもStableTokenも不十
           },
         'user' => user1_slack_id,
         'item_user' => user2_slack_id,
-        'reaction' => Settings.token_stamp.fifty
+        'reaction' => '50riz'
       }
     }
   end
   it "user1からuser2にTemporaryTokenを50RIZ付与する" do
     post '/api/v1/slacks', params: @params
-    expect(response.status).to eq 400
     expect(StableToken.find_by(user_id: User.find_by(slack_id: user1_slack_id).id).token_amount).to eq 0
     expect(StableToken.find_by(user_id: User.find_by(slack_id: user2_slack_id).id).token_amount).to eq 0
   end

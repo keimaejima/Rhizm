@@ -1,3 +1,3 @@
 class StableToken < ApplicationRecord
-	has_one :user, dependent: :destroy
+	belongs_to :user, dependent: :destroy
 end
