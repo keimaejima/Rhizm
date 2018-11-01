@@ -4,7 +4,7 @@ class CreatePresentTokens < ActiveRecord::Migration[5.2]
       t.integer :present_token_id
       t.integer :receive_user_id
       t.integer :present_user_id
-      t.integer :token_amount_master_id
+      t.integer :token_amount
 
       t.timestamps
     end

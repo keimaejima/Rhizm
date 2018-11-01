@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2018_10_28_140415) do
     t.integer "present_token_id"
     t.integer "receive_user_id"
     t.integer "present_user_id"
-    t.integer "token_amount_master_id"
+    t.integer "token_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

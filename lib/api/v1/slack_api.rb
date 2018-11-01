@@ -49,18 +49,18 @@ class Slack_API < Grape::API
             TemporaryToken.where(user_id: present_user.id).update(token_amount: t_token_amount - p_token_amount)
             StableToken.where(user_id: receive_user.id).update(token_amount: StableToken.find_by(user_id: receive_user.id).token_amount + p_token_amount)
             PresentToken.create(
-              present_user_id: present_user.user_id,
-              receive_user_id: receive_user.user_id,
-              token_amount_master_id: 0
+              present_user_id: present_user.id,
+              receive_user_id: receive_user.id,
+              token_amount: p_token_amount
               )
           elsif (t_token_amount + s_token_amount) >= p_token_amount
             TemporaryToken.where(user_id: present_user.id).update(token_amount: 0)
             StableToken.where(user_id: present_user.id).update(token_amount: s_token_amount - (p_token_amount - t_token_amount))
             StableToken.where(user_id: receive_user.id).update(token_amount: StableToken.find_by(user_id: receive_user.id).token_amount + p_token_amount)
             PresentToken.create(
-              present_user_id: present_user.user_id,
-              receive_user_id: receive_user.user_id,
-              token_amount_master_id: 0
+              present_user_id: present_user.id,
+              receive_user_id: receive_user.id,
+              token_amount: p_token_amount
               )
           else
             post_message(client, params[:event][:item][:channel], 'RIZの残高が足りないようです')
@@ -103,9 +103,14 @@ class Slack_API < Grape::API
              message = "【RIZ所持数ランキング】\n"
              stable_tokens = StableToken.order('token_amount DESC').limit(10)
              stable_tokens.each_with_index{|s, index|
-                p index
                message += "#{index+1}位は <@#{s.user.slack_id}>さんで #{s.token_amount} RIZ\n"
              }
+             message += "\n【RIZ受け取り総数ランキング】\n"
+             present_tokens = PresentToken.limit(10).group(:receive_user_id).sum(:token_amount).sort_by{ |_, v| v }
+             present_tokens.each_with_index do |(key,val), index|
+              user = User.find_by(id: key)
+              message += "#{index+1}位は <@#{user.slack_id}>さんで #{val} RIZ\n"
+             end
              post_message(client, params[:event][:channel], message)
            rescue => e
               p e
@@ -118,7 +123,8 @@ class Slack_API < Grape::API
             user = User.find_by(slack_id: params[:event][:user])
             stable_riz = StableToken.find_by(user_id: user.id)
             temporary_riz = TemporaryToken.find_by(user_id: user.id)
-            message = "<@#{params[:event][:user]}> さんは現時点で永続トークン：#{stable_riz.token_amount}RIZ、一時トークン：#{temporary_riz.token_amount}RIZ所持しています"
+            receive_amount = PresentToken.where(receive_user_id: user.id).sum(:token_amount)
+            message = "<@#{params[:event][:user]}> さんは現時点で永続トークン：#{stable_riz.token_amount}RIZ、一時トークン：#{temporary_riz.token_amount}RIZ所持しています\nこれまで受け取ったトークンの総量：#{receive_amount}RIZです"
             post_message(client, params[:event][:channel], message)
           rescue => e
             post_error(client, params[:event][:channel])
