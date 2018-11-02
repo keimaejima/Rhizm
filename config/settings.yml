@@ -4,6 +4,7 @@ token_stamp:
   fifty: 'yum'
 token_amount:
   fifty: 50
+  monthly_add: 50
 slack_param:
   channel_join: 'channel_join'
 channel_name:

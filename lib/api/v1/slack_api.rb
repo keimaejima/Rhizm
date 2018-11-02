@@ -105,7 +105,7 @@ class Slack_API < Grape::API
              stable_tokens.each_with_index{|s, index|
                message += "#{index+1}位は <@#{s.user.slack_id}>さんで #{s.token_amount} RIZ\n"
              }
-             message += "\n【RIZ受け取り総数ランキング】\n"
+             message += "\n【RIZ受け取り総量ランキング】\n"
              present_tokens = PresentToken.limit(10).group(:receive_user_id).sum(:token_amount).sort_by{ |_, v| v }
              present_tokens.each_with_index do |(key,val), index|
               user = User.find_by(id: key)

@@ -4,6 +4,9 @@ require File.expand_path(File.dirname(__FILE__) + "/environment")
 rails_env = ENV['RAILS_ENV'] || :development
 # cronを実行する環境変数をセット
 set :environment, rails_env
+
+ENV.each { |k, v| env(k, v) }
+
 # cronのログの吐き出し場所
 set :output, "#{Rails.root}/log/cron.log"
 
@@ -20,7 +23,10 @@ if rails_env.to_sym != :development
   end
 end
 
-
+every 1.minutes do
+  command "hogehoge"
+  rake "add_temporary_token:add"
+end
 # Use this file to easily define all of your cron jobs.
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
