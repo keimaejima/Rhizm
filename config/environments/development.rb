@@ -60,4 +60,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.web_console.whitelisted_ips = '0.0.0.0/0'
+
+  config.logger = Logger.new('log/development.log', 'weekly')
+  config.log_level = :warn
 end

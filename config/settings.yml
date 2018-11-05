@@ -1,10 +1,11 @@
 alert:
   something_wrong: '何か問題が発生したようです。少し時間を置いてから同じ操作をしてください。'
+  occured_in_api: 'Occured in api'
 token_stamp:
   fifty: 'yum'
 token_amount:
   fifty: 50
-  monthly_add: 50
+  monthly_add: 50s
 slack_param:
   channel_join: 'channel_join'
 channel_name:

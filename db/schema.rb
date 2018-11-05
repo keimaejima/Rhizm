@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_28_140415) do
+ActiveRecord::Schema.define(version: 2018_11_05_012854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,17 @@ ActiveRecord::Schema.define(version: 2018_10_28_140415) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "plans", force: :cascade do |t|
+    t.string "stripe_plan_id"
+    t.string "name"
+    t.integer "amount"
+    t.string "currency"
+    t.string "interval"
+    t.string "statement_descriptor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "present_tokens", force: :cascade do |t|
     t.integer "present_token_id"
     t.integer "receive_user_id"
@@ -63,6 +74,16 @@ ActiveRecord::Schema.define(version: 2018_10_28_140415) do
     t.integer "stable_token_id"
     t.integer "user_id"
     t.integer "token_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.integer "plan_id"
+    t.string "stripe_card_id"
+    t.string "stripe_customer_id"
+    t.string "stripe_suvscription_id"
+    t.datetime "active_until", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -85,6 +106,7 @@ ActiveRecord::Schema.define(version: 2018_10_28_140415) do
   create_table "users", force: :cascade do |t|
     t.integer "user_id"
     t.string "slack_id"
+    t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "charge_flag"

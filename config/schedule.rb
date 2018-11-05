@@ -23,10 +23,11 @@ if rails_env.to_sym != :development
   end
 end
 
-every 1.minutes do
-  command "hogehoge"
+#月一回TemporaryTokenを付与する
+every 1.month, :at => "9 AM" do
   rake "add_temporary_token:add"
 end
+
 # Use this file to easily define all of your cron jobs.
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.

@@ -28,7 +28,6 @@ class Slack_API < Grape::API
      ranking = bot_name + 'ranking'
      hold = bot_name + 'hold'
 
-     p params
      case params[:event][:type]
      when 'reaction_added'
       case params[:event][:reaction]
@@ -69,8 +68,9 @@ class Slack_API < Grape::API
           '200 OK'
           status 200
         rescue => e
-          p e
           post_error(client, params[:event][:item][:channel])
+          Rails.logger.fatal(Settings.alert.occured_in_api)
+          Rails.logger.fatal(e)
           error!('Internal Server Error', 500)
        end
      end
@@ -84,7 +84,9 @@ class Slack_API < Grape::API
           team_id: params[:team_id]
           )
       rescue => e
-          p e
+          Rails.logger.fatal(Settings.alert.occured_in_api)
+          Rails.logger.fatal(e)
+          error!('Internal Server Error', 500)
       end
 
       if params[:event][:subtype] == Settings.slack_param.channel_join
@@ -93,6 +95,8 @@ class Slack_API < Grape::API
           User.create(slack_id: params[:event][:user])
         rescue => e
           post_error(client, Settings.channel_name.alert,'ユーザーの作成に失敗しました')
+          Rails.logger.fatal(Settings.alert.occured_in_api)
+          Rails.logger.fatal(e)
           error!('User create failure', 500)
         end
        else
@@ -113,8 +117,9 @@ class Slack_API < Grape::API
              end
              post_message(client, params[:event][:channel], message)
            rescue => e
-              p e
              post_error(client, params[:event][:channel])
+             Rails.logger.fatal(Settings.alert.occured_in_api)
+             Rails.logger.fatal(e)
              error!('Internal Server Error', 500)
            end
          when hold
@@ -128,6 +133,8 @@ class Slack_API < Grape::API
             post_message(client, params[:event][:channel], message)
           rescue => e
             post_error(client, params[:event][:channel])
+            Rails.logger.fatal(Settings.alert.occured_in_api)
+            Rails.logger.fatal(e)
             error!('Internal Server Error', 500)
           end
 
