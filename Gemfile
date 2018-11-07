@@ -34,8 +34,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 gem 'grape'
-gem 'slack-ruby-client'
-gem 'async-websocket'
+# gem 'slack-ruby-client'
 gem 'config'
 gem 'whenever', :require => false
 gem 'activeadmin'
