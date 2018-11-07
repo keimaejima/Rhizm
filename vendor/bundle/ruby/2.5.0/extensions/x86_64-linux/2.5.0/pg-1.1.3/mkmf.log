@@ -253,7 +253,7 @@ checked program was:
 /* end */
 
 "gcc -o conftest -I/usr/local/include/ruby-2.5.0/x86_64-linux -I/usr/local/include/ruby-2.5.0/ruby/backward -I/usr/local/include/ruby-2.5.0 -I. -I/usr/include/postgresql    -O3 -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wmisleading-indentation -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wduplicated-cond -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
-/tmp/ccgaljvZ.o: In function `t':
+/tmp/ccNtDQlW.o: In function `t':
 /app/rhizm/vendor/bundle/ruby/2.5.0/gems/pg-1.1.3/ext/conftest.c:14: undefined reference to `PQencryptPasswordConn'
 collect2: error: ld returned 1 exit status
 checked program was:

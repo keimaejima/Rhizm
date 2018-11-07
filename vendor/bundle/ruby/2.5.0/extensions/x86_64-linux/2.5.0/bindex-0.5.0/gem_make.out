@@ -1,5 +1,5 @@
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/bindex-0.5.0/ext/bindex
-/usr/local/bin/ruby -r ./siteconf20181009-27-68fc8l.rb extconf.rb
+/usr/local/bin/ruby -r ./siteconf20181107-405-y50452.rb extconf.rb
 creating Makefile
 
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/bindex-0.5.0/ext/bindex
@@ -12,4 +12,4 @@ linking shared-object bindex/cruby.so
 
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/bindex-0.5.0/ext/bindex
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 cruby.so ./.gem.20181009-27-kzk85r/bindex
+/usr/bin/install -c -m 0755 cruby.so ./.gem.20181107-405-80537w/bindex

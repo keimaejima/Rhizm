@@ -1,5 +1,5 @@
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/ffi-1.9.25/ext/ffi_c
-/usr/local/bin/ruby -r ./siteconf20181009-27-2xpuu5.rb extconf.rb
+/usr/local/bin/ruby -r ./siteconf20181107-405-un0xrt.rb extconf.rb
 checking for ffi_call() in -lffi... yes
 checking for ffi_closure_alloc()... yes
 checking for ffi_raw_call()... yes
@@ -47,4 +47,4 @@ linking shared-object ffi_c.so
 
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/ffi-1.9.25/ext/ffi_c
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 ffi_c.so ./.gem.20181009-27-jed6zm
+/usr/bin/install -c -m 0755 ffi_c.so ./.gem.20181107-405-14lz26r

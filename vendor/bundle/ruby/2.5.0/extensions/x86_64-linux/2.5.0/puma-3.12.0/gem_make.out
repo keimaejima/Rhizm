@@ -1,5 +1,5 @@
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/puma-3.12.0/ext/puma_http11
-/usr/local/bin/ruby -r ./siteconf20181009-27-7ajt2j.rb extconf.rb
+/usr/local/bin/ruby -r ./siteconf20181107-405-1uc9pbg.rb extconf.rb
 checking for BIO_read() in -lcrypto... yes
 checking for SSL_CTX_new() in -lssl... yes
 checking for openssl/bio.h... yes
@@ -53,4 +53,4 @@ linking shared-object puma/puma_http11.so
 
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/puma-3.12.0/ext/puma_http11
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 puma_http11.so ./.gem.20181009-27-slys6j/puma
+/usr/bin/install -c -m 0755 puma_http11.so ./.gem.20181107-405-ru8b9y/puma

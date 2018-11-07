@@ -1,5 +1,5 @@
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/msgpack-1.2.4/ext/msgpack
-/usr/local/bin/ruby -r ./siteconf20181009-27-q8gdeb.rb extconf.rb
+/usr/local/bin/ruby -r ./siteconf20181107-405-q9gqcp.rb extconf.rb
 checking for ruby/st.h... yes
 checking for st.h... yes
 checking for rb_str_replace() in ruby.h... yes
@@ -38,4 +38,4 @@ linking shared-object msgpack/msgpack.so
 
 current directory: /app/rhizm/vendor/bundle/ruby/2.5.0/gems/msgpack-1.2.4/ext/msgpack
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 msgpack.so ./.gem.20181009-27-1e18n3k/msgpack
+/usr/bin/install -c -m 0755 msgpack.so ./.gem.20181107-405-19st9ms/msgpack
