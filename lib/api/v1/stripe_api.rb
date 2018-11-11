@@ -22,10 +22,7 @@ class Stripe_API < Grape::API
         stripe_customer.source = params[:stripeToken] # Stripe.jsで変換したトークンを渡すだけ
         stripe_customer.save
 
-        # stripe_subscription = Stripe::Subscription.retrieve(stripe_customer.id)
-        # stripe_subscription.plan = Plan.find(params[:plan_id])
-        # stripe_subscription.save
-        Stripe::Subscription.create(
+        subscription = Stripe::Subscription.create(
           :customer => stripe_customer.id,
           :items => [
             {
@@ -33,6 +30,8 @@ class Stripe_API < Grape::API
             },
           ]
         )
+        p subscription
+        # UserMailer.welcome_email(User.find_by(id:6)).deliver_later
       rescue => e
         Rails.logger.fatal(Settings.alert.occured_in_api)
         Rails.logger.fatal(e)

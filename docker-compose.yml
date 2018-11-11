@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - "DATABASE_HOST=db"
+      - "DATABASE_PORT=5432"
+      - "DATABASE_USER=postgres"
+      - "DATABASE_PASSWORD=mysecretpassword1234"
+      - "SLACK_TOKEN=xoxp-448815397236-448391582593-456838812215-42ed1785fb3e332dc6f86ca512bb8cf5"
+    links:
+      - db
+    volumes:
+      - ".:/rhizm" #共有フォルダの設定
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    stdin_open: true
+  db:
+    image: postgres:10.1
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=mysecretpassword1234"

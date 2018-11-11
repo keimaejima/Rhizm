@@ -10,3 +10,5 @@ slack_param:
   channel_join: 'channel_join'
 channel_name:
   alert: 'bot-test'
+email:
+  info: 'info@antway.co.jp'
