@@ -30,13 +30,20 @@ class Slack_API < Grape::API
 
      case params[:event][:type]
      when 'reaction_added'
-      #全リアクションを一旦保存
-      begin
-        
-      rescue => e
-          Rails.logger.fatal(Settings.alert.occured_in_api)
-          Rails.logger.fatal(e)
-          error!('Internal Server Error', 500)
+      ##チャンネルへの全リアクションを一旦保存
+      if params[:event][:item][:type] == 'message'
+        begin
+          Reaction.create(
+            user_id: params[:event][:user],
+            reaction: params[:event][:reaction],
+            item_user_id: params[:event][:item_user],
+            channel_id: params[:event][:item][:channel]
+            )
+        rescue => e
+            Rails.logger.fatal(Settings.alert.occured_in_api)
+            Rails.logger.fatal(e)
+            error!('Internal Server Error', 500)
+        end
       end
       case params[:event][:reaction]
         #TODO:トークンの付与量によって分岐をつくる
@@ -88,9 +95,8 @@ class Slack_API < Grape::API
         Message.create(
           user_id: params[:event][:user],
           text: params[:event][:text],
-          channel_id: params[:event][:channel],
-          team_id: params[:team_id]
-          )
+          channel_id: params[:event][:channel]
+        )
       rescue => e
           Rails.logger.fatal(Settings.alert.occured_in_api)
           Rails.logger.fatal(e)
