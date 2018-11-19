@@ -42,10 +42,9 @@ ActiveRecord::Schema.define(version: 2018_11_05_012854) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.string "slack_id"
+    t.string "user_id"
     t.text "text"
     t.string "channel_id"
-    t.string "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

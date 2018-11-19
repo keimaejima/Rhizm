@@ -41,6 +41,7 @@ gem 'activeadmin'
 gem 'devise'
 gem 'stripe'
 gem 'annotate'
+gem 'rack-rewrite', '~> 1.5.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

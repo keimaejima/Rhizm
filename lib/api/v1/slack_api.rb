@@ -30,6 +30,14 @@ class Slack_API < Grape::API
 
      case params[:event][:type]
      when 'reaction_added'
+      #全リアクションを一旦保存
+      begin
+        
+      rescue => e
+          Rails.logger.fatal(Settings.alert.occured_in_api)
+          Rails.logger.fatal(e)
+          error!('Internal Server Error', 500)
+      end
       case params[:event][:reaction]
         #TODO:トークンの付与量によって分岐をつくる
       when /(10*?|50*?)riz/
@@ -40,7 +48,7 @@ class Slack_API < Grape::API
        begin
         present_user = User.find_by(slack_id: params[:event][:user])
         receive_user = User.find_by(slack_id: params[:event][:item_user])
-          #プレゼンとするトークンの量によって分岐させる
+          #プレゼントするトークンの量によって分岐させる
           p_token_amount = params[:event][:reaction].delete("^0-9").to_i
           t_token_amount = TemporaryToken.find_by(user_id: present_user.id).token_amount
           s_token_amount = StableToken.find_by(user_id: present_user.id).token_amount
@@ -78,7 +86,7 @@ class Slack_API < Grape::API
       #全メッセージを一旦保存
       begin
         Message.create(
-          slack_id: params[:event][:user],
+          user_id: params[:event][:user],
           text: params[:event][:text],
           channel_id: params[:event][:channel],
           team_id: params[:team_id]
@@ -92,7 +100,7 @@ class Slack_API < Grape::API
       if params[:event][:subtype] == Settings.slack_param.channel_join
          ##ユーザーがチームに新規参加
         begin
-          User.create(slack_id: params[:event][:user])
+          User.create(slack_id: params[:event][:user], email: client.users_info(user: params[:event][:user]).user.profile.email)
         rescue => e
           post_error(client, Settings.channel_name.alert,'ユーザーの作成に失敗しました')
           Rails.logger.fatal(Settings.alert.occured_in_api)

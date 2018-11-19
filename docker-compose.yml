@@ -10,7 +10,7 @@ services:
       - "DATABASE_PORT=5432"
       - "DATABASE_USER=postgres"
       - "DATABASE_PASSWORD=mysecretpassword1234"
-      - "SLACK_TOKEN=xoxp-448815397236-448391582593-456838812215-42ed1785fb3e332dc6f86ca512bb8cf5"
+      - "SLACK_TOKEN=xoxp-448815397236-448391582593-476696670627-4b6be2e0ed475398df58d81f3fb5efc8"
     links:
       - db
     volumes:

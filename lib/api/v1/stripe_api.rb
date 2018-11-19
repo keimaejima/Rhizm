@@ -31,7 +31,7 @@ class Stripe_API < Grape::API
           ]
         )
         p subscription
-        # UserMailer.welcome_email(User.find_by(id:6)).deliver_later
+        UserMailer.welcome_email(user).deliver_later
       rescue => e
         Rails.logger.fatal(Settings.alert.occured_in_api)
         Rails.logger.fatal(e)

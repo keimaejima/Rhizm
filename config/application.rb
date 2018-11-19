@@ -33,5 +33,8 @@ module Rhizm
     config.generators.system_tests = nil
 
     config.assets.initialize_on_precompile = false
+    config.middleware.insert_before(Rack::Runtime, Rack::Rewrite) do
+        r301 %r{/life_lab(.*)}, 'https://rhizm-lp.herokuapp.com$1'
+    end
   end
 end
